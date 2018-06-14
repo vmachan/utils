@@ -31,7 +31,7 @@ Write-Host "Parameter Path is $p_path"
 Write-Host "Parameter file extension are $p_file_extension"
 pause
 
-$files = Get-ChildItem -path ".\$p_path\" -filter $p_file_extension
+$files = Get-ChildItem -path "$p_path\" -filter $p_file_extension
 
 foreach ($item in $files)
 {
