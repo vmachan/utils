@@ -1,0 +1,35 @@
+
+cfn-watch-evnts() {
+  watch " aws cloudformation describe-stack-events --stack-name $1 | jq -r '.StackEvents[] | \"\(.Timestamp[:19]+\"Z\" | fromdate | strftime(\"%H:%M:%S\")) \(.LogicalResourceId) \(.ResourceType) \(.ResourceStatus)\"  '"
+}
+
+cfn-list-all-stcks() {
+  aws cloudformation list-stacks | jq -r '.StackSummaries[] | "\(.StackName) \(.LastUpdatedTime) \(.StackStatus)" ' | column -t
+}
+
+cfn-list-curr-stcks() {
+  aws cloudformation list-stacks | jq -r '.StackSummaries[] | select(.StackStatus != "DELETE_COMPLETE") | "\(.StackName) \(.LastUpdatedTime) \(.StackStatus)" ' | column -t
+}
+
+cfn-get-stck-outputs() {
+aws cloudformation describe-stacks --stack-name $1 --query 'Stacks[*].Outputs'
+}
+
+proceed_yn() {
+  answer="No"
+
+  while [[ $answer == "No" ]]
+  do
+    echo "Continue (Yes/No)?"
+    read _answer
+    if [[ $_answer == "Yes" ]]
+    then
+      answer="Yes" 
+    elif [[ $_answer == "No" ]] 
+    then
+      echo "Exiting.."
+      exit -1
+    fi
+  done
+}
+
