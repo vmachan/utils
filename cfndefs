@@ -1,5 +1,5 @@
 
-cfn-watch-evnts() {
+cfn-watch-stck-evnts() {
   watch " aws cloudformation describe-stack-events --stack-name $1 | jq -r '.StackEvents[] | \"\(.Timestamp[:19]+\"Z\" | fromdate | strftime(\"%H:%M:%S\")) \(.LogicalResourceId) \(.ResourceType) \(.ResourceStatus)\"  '"
 }
 
